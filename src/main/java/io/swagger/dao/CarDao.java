@@ -28,31 +28,42 @@ public class CarDao {
         HashMap<String, Object[]> hm = new HashMap<>();
         hm.put("marque", null);
         //hm.put("origine", new String[]{"France", "Europe", "Japon"});
-        //hm.put("categorie", new String[]{"Berline", "Citadine"});
+        hm.put("categorie", new String[]{"Berline", "4x4 / SUV"});
         Requirements c = new Requirements(hm);
-        System.out.println(getRemainingCarsForAttribute("categorie", c));
+        System.out.println(getRemainingCarsForAttribute("origine", c));
 
     }
 
     public static HashMap<String, Integer> getRemainingCarsForAttribute(String attribute, Requirements requirements){
-        StringBuilder sqlRequest = new StringBuilder("SELECT ")
-                .append(attribute)
-                .append(", count(1) as CountModalite FROM mycar.possibilite_selection WHERE TRUE");
+        StringBuilder sqlRequest = new StringBuilder("SELECT a.").append(attribute).append("_lbl,\n" +
+                "       coalesce(p.N,0)\n" +
+                "FROM mycar.").append(attribute).append(" a\n" +
+                "       left join (\n" +
+                "                 select ").append(attribute).append("_id,\n" +
+                "                        count(1) as N\n" +
+                "                 from possibilite_selection\n" +
+                "                 where true\n");
         sqlRequest = appendWhere(sqlRequest, requirements);
-        sqlRequest.deleteCharAt(sqlRequest.length()-1).append(" GROUP BY ")
-                .append(attribute)
-                .append(" HAVING TRUE;");
+        sqlRequest.deleteCharAt(sqlRequest.length()-1)
+                .append("\ngroup by ")
+                .append(attribute).append(") p\n on a.")
+                .append(attribute).append("_id = p.")
+                .append(attribute).append("_id;");
+        if(attribute.equals("origine")) sqlRequest = new StringBuilder(getSqlForOrigine());
+
         JdbcTemplate vJdbcTemplate = new JdbcTemplate(getDataSource());
         System.out.println(sqlRequest.toString());
-        //TODO : cast list to hashmap
+
         HashMap<String, Integer> hm = new HashMap<>();
-        for (Map<String, Object> map :  vJdbcTemplate.queryForList(sqlRequest.toString())) {
-            String key = map.entrySet().toArray()[0].toString();
-            key = key.substring(key.indexOf('=')+1);
-            String value = map.entrySet().toArray()[1].toString();
-            value = value.substring(value.indexOf('=')+1);
-            hm.put(key, Integer.parseInt(value));
-        }
+        try {
+            for (Map<String, Object> map : vJdbcTemplate.queryForList(sqlRequest.toString())) {
+                String key = map.entrySet().toArray()[0].toString();
+                key = key.substring(key.indexOf('=') + 1);
+                String value = map.entrySet().toArray()[1].toString();
+                value = value.substring(value.indexOf('=') + 1);
+                hm.put(key, Integer.parseInt(value));
+            }
+        }catch (Exception e) {System.err.println(e.getMessage());}
         return hm;
     }
 
@@ -140,4 +151,27 @@ public class CarDao {
         dataSource.setPassword(PASSWORD);
         return dataSource;
     }
+
+    private static String getSqlForOrigine(){
+        return "\n" +
+                "SELECT a.origine_lbl,\n" +
+                "       coalesce(p.N,0)\n" +
+                "FROM mycar.origine a\n" +
+                "       left join (\n" +
+                "                 select pays_id as origine_id,\n" +
+                "                        count(1) as N\n" +
+                "                 from possibilite_selection\n" +
+                "                 where true\n" +
+                "                     and categorie in ('Berline', '4x4 / SUV')\n" +
+                "                 group by pays\n" +
+                "                 union\n" +
+                "                 select zone_id as origine_id,\n" +
+                "                        count(1) as N\n" +
+                "                 from possibilite_selection\n" +
+                "                 where true\n" +
+                "                     and categorie in ('Berline', '4x4 / SUV')\n" +
+                "                 group by pays\n" +
+                "                 ) p\n" +
+                "         on a.origine_id = p.origine_id";
+    };
 }

@@ -65,20 +65,22 @@ public class CarApiController implements CarApi {
         HashMap<String, HashMap<String, Integer>> remainingCars = new HashMap();
         Requirements requirements = getRequirement(httpEntity);
         for(String attribute : requirements.getCriteres().keySet()){
-            if(attribute.equals("origine")){
-                remainingCars.put("zone", CarDao.getRemainingCarsForAttribute("zone", requirements));
-                remainingCars.put("pays", CarDao.getRemainingCarsForAttribute("pays", requirements));
-                continue;
-            }
+//            if(attribute.equals("origine")){
+//                remainingCars.put("zone", CarDao.getRemainingCarsForAttribute("zone", requirements));
+//                remainingCars.put("pays", CarDao.getRemainingCarsForAttribute("pays", requirements));
+//                continue;
+//            }
             if(attribute.equals("prix")) continue;
             remainingCars.put(attribute, CarDao.getRemainingCarsForAttribute(attribute, requirements));
         }
 
-        System.out.println(remainingCars);
+        //System.out.println(remainingCars);
 
         return new ResponseEntity(remainingCars, HttpStatus.OK);
     }
 
+
+    /* PRIVATE*/
 
     private Requirements getRequirement(HttpEntity<String> httpEntity){
         ObjectMapper mapper = new ObjectMapper();
