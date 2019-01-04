@@ -1,0 +1,56 @@
+POST http://localhost:8001/v2/numberofcars
+Accept: application/json
+
+{marque : "Toyota"}
+
+<> 2018-11-21T121318.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcars
+Accept: application/json
+
+<> 2018-11-21T121245.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcars
+Accept: application/json
+Cache-Control: no-cache
+
+<> 2018-11-21T121229.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcars?marque=Peugeot
+Accept: application/json
+Cache-Control: no-cache
+
+<> 2018-11-21T120847.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcars?marque=Peugeot
+Accept: application/json
+Cache-Control: no-cache
+
+<> 2018-11-20T074734.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcars?marque=Peugeot
+Accept: */*
+Cache-Control: no-cache
+
+<> 2018-11-20T074720.415.json
+
+###
+
+POST http://localhost:8001/v2/numberofcar?marque=Peugeot
+Accept: */*
+Cache-Control: no-cache
+
+<> 2018-11-20T074714.404.json
+
+###
+

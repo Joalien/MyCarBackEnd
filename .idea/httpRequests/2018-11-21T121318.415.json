@@ -1,0 +1,8 @@
+{
+  "timestamp": "2018-11-20T23:13:18.228Z",
+  "status": 415,
+  "error": "Unsupported Media Type",
+  "exception": "org.springframework.web.HttpMediaTypeNotSupportedException",
+  "message": "Content type '*/*;charset=UTF-8' not supported",
+  "path": "/v2/numberofcars"
+}

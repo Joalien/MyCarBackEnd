@@ -15,7 +15,7 @@ import java.util.*;
 
 public class CarDao {
     private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String JDBC_URL = "jdbc:mysql://localhost/mycar";
+    private static final String JDBC_URL = "jdbc:mysql://memo_db_1/mycar";
     private static final String USERNAME = "josquin";
     private static final String PASSWORD = "@SQLpassword123";
 

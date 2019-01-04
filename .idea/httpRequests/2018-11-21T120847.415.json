@@ -1,0 +1,8 @@
+{
+  "timestamp": "2018-11-20T23:08:47.204Z",
+  "status": 415,
+  "error": "Unsupported Media Type",
+  "exception": "org.springframework.web.HttpMediaTypeNotSupportedException",
+  "message": "Content type 'multipart/form-data;boundary=NFPWAV10-8Wt5ja5nBKCkfGjF8AOVs' not supported",
+  "path": "/v2/numberofcars"
+}
